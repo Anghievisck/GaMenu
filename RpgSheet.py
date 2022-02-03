@@ -1,254 +1,162 @@
-from lib import * #My libary uses prompt, ErrorPrompt and list for costumizating the 'Get' functions
-from random import randint as rint
+from lib import *
 import pickle
+from dataclasses import dataclass
+import sys
+#TODO safer design
 
-Options = range(1, 8)
-
-#intro!!
 print("*************************************")
-print("  Welcome to the RPG Sheet Editor!!  ")
+print("  Welcome to the RPG Sheet Editor!!	")
 print("*************************************\n")
 
-ListOfOptions = "RPG Sheet Editor:\n 1. Create a Sheet\n 2. Show a Sheet\n 3. Level Up\n 4. Roll a dice\n 5. Save a Sheet\n 6. Load a Sheet\n 7. Exit editor\n\nSelect a option: "
-DicePrompt = " 1. D4		6. D20\n 2. D6		7. D100\n 3. D8		8. Custom Dice\n 4. D10		9. 'Create a Sheet' Roll\n 5. D12		10. Exit\n\nSelect a option: "
+types = (
+	"Create a new Sheet",
+	"List Sheets",
+	"Show a Sheet",
+	"Level Up",
+	"Roll Dice",
+	"Delete Sheet",
+	"Save",
+	"Load",
+	"Clear",
+	"Exit",
+)
 
-RangeForStats = range(1, 21)
+def main():
+	class OP(IntEnum):
+		MakeSheet = auto()
+		ListSheets = auto()
+		PrintSheet = auto()
+		LevelUp = auto()
+		RollDice = auto()
+		DeleteSheet = auto()
+		Save = auto()
+		Load = auto()
+		Clear = auto()
+		Exit = auto()
+		COUNT = auto()
 
-Min = 1
-
-Doing = ""
-
-Name = None
-Health = None
-BaseSTR = None
-BaseDEX = None
-BaseCON = None
-BaseINT = None
-BaseWIS = None
-BaseCHA = None
-
-SaveState = None
-
-while True:
-
-	Doing = GetOption(prompt = ListOfOptions, list = Options)
-
-	if Doing == 1:
-		print("\nRunning 'Create a Sheet'\n")
-	if Doing == 2:
-		print("\nRunning 'Show a Sheet'\n")
-	if Doing == 3:
-		print("\nRunning 'Level Up'\n")
-	if Doing == 4:
-		print("\nRunning 'Roll a Dice'\n")
-	if Doing == 5:
-		print("\nRunning 'Save a Sheet'")
-	if Doing == 6:
-		print("\nRunning 'Load a Sheet'")
-
-# This is the 'Create a sheet' option
-	while Doing == 1:
-		while True:
-
-			# This asks the users Nickname
-			Name = input("What is your name? ")
-			Confirmation = GetStr(prompt = f"Is '{Name}' your name? ")
-			if Confirmation in ["N", "n"]:
-				print("So...")
-			else:
-				print()
-				break
-
-		#This asks the users intial Strenght
-		while True:
-			BaseSTR = GetInt(prompt="What is your STR stat? ", list= [*RangeForStats])
-			Confirmation = GetStr(prompt="Are you sure? ")
-			if Confirmation in ["N", "n"]:
-				print("So...")
-			else:
-				print()
-				break
-
-		#This asks the users intial Dexterity
-		while True:
-			BaseDEX = GetInt(prompt="What is your DEX stat? ", list=[*RangeForStats])
-			Confirmation = GetStr(prompt="Are you sure? ")
-			if Confirmation in ["N", "n"]:
-				print("So...")
-			else:
-				print()
-				break
-
-		#This asks the users intial Constituition
-		while True:
-			BaseCON = GetInt(prompt="What is your CON stat? ", list=[*RangeForStats])
-			Confirmation = GetStr(prompt="Are you sure? ")
-			if Confirmation in ["N", "n"]:
-				print("So...")
-			else:
-				print()
-				break
-
-		#This asks the users intial Intelligence
-		while True:
-			BaseINT = GetInt(prompt="What is your INT stat? ", list=[*RangeForStats])
-			Confirmation = GetStr(prompt="Are you sure? ")
-			if Confirmation in ["N", "n"]:
-				print("So...")
-			else:
-				print()
-				break
-
-		#This asks the users intial Wisdom
-		while True:
-			BaseWIS = GetInt(prompt="What is your WIS stat? ", list=[*RangeForStats])
-			Confirmation = GetStr(prompt="Are you sure? ")
-			if Confirmation in ["N", "n"]:
-				print("So...")
-			else:
-				print()
-				break
-
-		# This asks the users intial Charisma
-		while True:
-			BaseCHA = GetInt(prompt="What is your CHA stat? ", list=[*RangeForStats])
-			Confirmation = GetStr(prompt="Are you sure? ")
-			if Confirmation in ["N", "n"]:
-				print("So...")
-			else:
-				print()
-				break
-
-		SaveState = {"Name": Name, "Health": Health, "STRstat": BaseSTR, "DEXstat": BaseDEX, "CONstat": BaseCON, "INTstat": BaseINT, "WISstat": BaseWIS, "CHAstat": BaseCHA}
-		
-		#This create a confirmation, so if the user is unsatisfied with the sheet created, he can redo it
-		while True:
-			Confirmation = GetStr(prompt = "Do you want to redo everything? ")
-			if Confirmation == "Y":
-				while True:
-					print("ARE YOU SURE?")
-					Confirmation = GetStr(prompt = ">>> ")
-					if Confirmation == "Y":
-						break
-					else:
-						break
-			elif Confirmation == "N":
-				print()
-				Doing = GetOption(prompt = ListOfOptions, list = Options)
-				if Doing == 1:
-					print("\nRunning 'Create a Sheet'\n")
-				if Doing == 2:
-					print("\nRunning 'Show a Sheet'\n")
-				if Doing == 3:
-					print("\nRunning 'Level Up'\n")
-				if Doing == 4:
-					print("\nRunning 'Roll a Dice'\n")
-				if Doing == 5:
-					print("\nRunning 'Save a Sheet'")
-				if Doing == 6:
-					print("\nRunning 'Load a Sheet'")
-				break
-
-# This is the 'Show a sheet' option
-	while Doing == 2:
-
-		if SaveState == None:
-			print("There is no sheet yet, create or load a sheet...")
-			print()
-			break
-		else:
-			print(f"{SaveState}\n")
-			break
-
-# NOT WORKING YET
-# This is the 'Level Up' option
-	while Doing == 3:
-		print("under development")
+	Sheets = []
+	#Sheets.append(Sheet("pedro", 100, Stats(0, 0, 0, 0, 0, 2)))
+	#Sheets.append(Sheet("owsei", 100, Stats(2, 0, 0, 0, 0, 0)))
+	#Sheets.append(Sheet("o", 100, Stats(2, 2, 2, 2, 2, 2)))
+	def PrintSheet():
+		nonlocal Sheets
+		for i in r(Sheets):
+			print(f"{i+1}: {Sheets[i].Name}")
+	while True:
+		for i in r(types):
+			print(f"{i+1}: {types[i]}")
+		Doing = GetIn(GetInt, range(1, OP.COUNT), '>')
 		print()
-		break
-		
+		match Doing:
+			case OP.MakeSheet:# make sheet
+				Sheets.append(MakeSheet())
+				Sheets = sorted(Sheets)
+			case OP.PrintSheet:
+				PrintSheet()
+				ShowSheet = GetIn(GetInt, range(len(Sheets)+1), 'Sheet$')-1
+				PrintSheet(Sheets[ShowSheet])
+			case OP.ListSheets:
+				PrintSheet()
+				print('\n')
+			case OP.LevelUp:pass
+			case OP.RollDice:pass
+			case OP.DeleteSheet:
+				PrintSheet()
+			case OP.Save:
+				UseFile("rpg.dat", Sheets)
+			case OP.Load:
+				#TODO
+				#if Sheets:
+				ld = UseFile("rpg.dat")
+				ldr = False # load will remove
+				rms:list[Sheet] = [] # removes
+				if Sheets:
+					for i in r(ld):
+						if not Sheets[i] in ld:
+							ldr = True
+							rms.append(Sheets[i].Name)
+				if ldr:
+					print("loading error")
+					print(f"there are {len(rms)} created sheets that are not in rpg file")
+					print("replace or append? [r/a]")
+					x = GetIn(input, ['r', 'R', 'a', 'A'], '>').lower()
+					if x == 'r':
+						Sheets = ld # replace
+					else:
+						Sheets = list(set([*Sheets, *ld])) # append (ironically doens't uses append)
+				else:
+					Sheets = ld
+
+			case OP.Clear:
+				clear()
+			case OP.Exit:
+				exit(0)
+
+
 		#The ideia is simple: It shows all currents stats, and how many points we have + health that would be gained and mana...
 		#The problem here is: I don't know how level up in top table rpgs... lol
 
-# This is the 'Roll a dice' option
-	while Doing == 4:
-		WhichDice = GetOption(prompt = DicePrompt, list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
-		if WhichDice == 1:
-			Max = 4
-		elif WhichDice == 2:
-			Max = 6
-		elif WhichDice == 3:
-			Max = 8
-		elif WhichDice == 4:
-			Max = 10
-		elif WhichDice == 5:
-			Max = 12
-		elif WhichDice == 6:
-			Max = 20
-		elif WhichDice == 7:
-			Max = 100
-		elif WhichDice == 8:
-			while True:
-				NewDice = input("What is the max number that you want? ")
-				if not NewDice.isnumeric():
-					print("Please remember that you need to enter a number")
-				else:
-					break
-			Max = int(NewDice)
-		elif WhichDice == 9:
-			NescessariesRolls = 5
-			while NescessariesRolls != 0:
-				Max = 20
-				Roll = rint(Min, Max)
-				print(f"You rolled {Roll}")
-				NescessariesRolls = NescessariesRolls - 1
-		
-		elif WhichDice == 10:
-			print("Exiting 'Roll a Dice'")
-			break
+@dataclass
+class Stats:
+	STR:int
+	DEX:int
+	CON:int
+	INT:int
+	WIS:int
+	CHA:int
 
-		Roll = rint(Min, Max)
-		print(f"You rolled {Roll}")
-		print()
+@dataclass
+class Sheet:
+	Name:str
+	Health:int
+	Stats:Stats
+	def __gt__(this, x):
+		assert type(x) == Sheet
+		return this.Name > x.Name
 
-		Confirmation = GetStr(prompt = "Do you want to roll again? ('y' for yes, and 'n' for no): ")
-		if Confirmation == "Y":
-			pass
-		elif Confirmation == "N":
-			break
+def PrintSheet(sheet):
+	print(f"""
+=====================
+= {sheet.Name}{' '*(17-len(sheet.Name))} =
+=====================
+Stats:
+-> STR: {sheet.Stats.STR}
+-> DEX: {sheet.Stats.DEX}
+-> CON: {sheet.Stats.CON}
+-> INT: {sheet.Stats.INT}
+-> WIS: {sheet.Stats.WIS}
+-> CHA: {sheet.Stats.CHA}
+""")
 
-# This is the 'Save the sheet' option
-	while Doing == 5:
-		SaveState = {"Name": Name, "Health": Health, "STRstat": BaseSTR, "DEXstat": BaseDEX, "CONstat": BaseCON, "INTstat": BaseINT, "WISstat": BaseWIS, "CHAstat": BaseCHA}
-		Confirmation = GetStr(prompt = "Do you want to save the current sheet? ('y' for yes, and 'n' for no): ")
-		if Confirmation == "Y":
-			pass
-		elif Confirmation == "N":
-			print("Exiting Save")
-			break
-		with open("SheetLog", "wb") as f:
-			pickle.dump(SaveState, f)
-		print("... ... ... ...\nSaved!\n")
-		break
+def LevelUp():pass
+def RollDice():pass
 
-# This is the 'Load a sheet' option
-	while Doing == 6:
-		Confirmation = GetStr(prompt = "Do you want to load a sheet? ('y' for yes, and 'n' for no): ")
-		if Confirmation == "Y":
-			pass
-		elif Confirmation == "N":
-			print("Exiting Load")
-			break
-		with open("SheetLog", "rb") as f:
-			SaveState = pickle.load(f)
-		print("... ... ... ...\nLoaded!\n")
-		break
+def Get(prompt, confs = "is \"%s\" right?", conflist = ['Y', 'y', "yes", "Yes", "YES"], GetFunc = input):
+	ipt = GetFunc(prompt)
+	if confs:
+		conf = input(confs % ipt)
+		if not conf in conflist:
+			return Get(prompt, confs, conflist)
+	return ipt
 
-# This is the 'Exit editor' option
-	if Doing == 7:
-		Confirmation = GetStr(prompt="Do your really want to exit? ")
-		if Confirmation in ["N", "n"]:
-			print("Ok, then\n")
-		else:
-			print("Existing 'RPG Sheet Editor'")
-			break
+_gts = list(range(1, 21))
+def GetStat(StatName):
+	global _gts
+	return GetIf(GetInt, lambda x: x in _gts, "What is your %s stat? " % StatName)
+
+def MakeSheet():
+	# This asks the user's stuff
+	Name = Get("What is your name:")
+	BaseSTR = GetStat("STR")
+	BaseDEX = GetStat("DEX")
+	BaseCON = GetStat("CON")
+	BaseINT = GetStat("INT")
+	BaseWIS = GetStat("WIS")
+	BaseCHA = GetStat("CHA")
+	return Sheet(
+		Name, 100,# 100?
+		Stats( BaseSTR, BaseDEX, BaseCON, BaseINT, BaseWIS, BaseCHA)
+	)
+
+if __name__ == "__main__":main()

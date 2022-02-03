@@ -1,48 +1,68 @@
 from lib import *
-import random
+import unittest
 
-question = "Which test do you want to do now?\n 1. 'For' loop test\n 2. Password Maker\n 3. None\n>>> "
-NumberOfOptions = 3
-RangeOfOptions = range(1, NumberOfOptions+1)
-options = [*RangeOfOptions]
+# in a unittest.TestCase class
+#	self.assertEqual('foo'.upper(), 'FOO')
+#	self.assertTrue('FOO'.isupper())
+#	self.assertFalse('Foo'.isupper())
 
-while True:
-	ActualTest = GetOption(prompt = question, list = options)
+def example():
+	# def testing func/class
+	def SplitString(line:str, sep:str = " ", quote:str = '"', escape ='\\', MaintainQuotes:bool = True) -> list[str]:
+		# 'hello my "cool friend" man!' -> ['hello', 'my', '"coll friend"', 'man!']
+		InString = False
+		ret:list[str] = []
+		now = ""
+		for pos in r(line):
+			char = line[pos]
+			if char == quote and pos > 0 and line[pos-1] != escape:
+				if MaintainQuotes:now+='"'
+				InString = not InString
+			else:
+				# " start or end string
+				if char == sep and not InString:
+					ret.append(now)
+					now = ""
+				else:
+					now += line[pos]
+		if now:ret.append(now)
+		return ret
+	# def tester class
+	class Tester(unittest.TestCase):
+		"""Tester""" # add this for class name
+		def TestSplitString(this):
+			# 'hello my "cool friend" man!' -> ['hello', 'my', '"coll friend"', 'man!']
+			string = 'hello my "cool friend" man!'
+			this.assertEqual(
+				SplitString(string),
+				['hello', 'my', '"cool friend"', 'man!']
+			)
+			string = 'hello my cool friend man!'
+			this.assertEqual(
+				SplitString(string),
+				['hello', 'my', 'cool', 'friend', 'man!']
+			)
+	# TestAll(tester classes)
+	TestAll(Tester)
 
-	# For loop test
-	while ActualTest == 1:
-		cont = 0
+def TestAll(cls):
+	if type(cls) == type(int): # type type
+		cls = cls()
 
-		print("Welcome! This is the for loop test area, where we will count the exact number of characters in a word.")
+	clsname = cls.__doc__
 
-		palavra = input("Please input any word: ")
+	funcs = dir(cls) # get all vars
+	testfuncs = []
+	for i in r(funcs):
+		if funcs[i].startswith("Test"): # get Test... var (test func)
+			testfuncs.append(eval(f"cls.{funcs[i]}")) # get func by name
+	for func in testfuncs:
+		func()
+	if clsname:
+		print(f"all tests for \"{clsname}\" passed")
 
-		letras = []
+def main():
+	example()
+	pass
 
-
-		for letras in palavra:
-			cont += 1
-
-		print(f"\nThere is {cont} characters in '{palavra}'\n")
-
-		ActualTest = GetOption(prompt=question, list=options)
-
-	# Password Maker
-	while ActualTest == 2:
-		lower = "abcdefghijklmnopqrstuvwxyz"
-		upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-		numbers = "0123456789"
-		symbols = "[]{}()*;/,_-@#$ "
-
-		all = lower+upper+numbers+symbols
-
-		leght = 16
-		password = "".join(random.sample(all,leght))
-		print(f"\nPassword generated: {password}\n")
-
-		ActualTest = GetOption(prompt=question, list=options)
-
-	# Exit function
-	if ActualTest == 3:
-		print("\nExiting TestZone...")
-		break
+if __name__ == "__main__":main()

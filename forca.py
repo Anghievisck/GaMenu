@@ -1,12 +1,12 @@
+from lib import *
+
 #Intro:
-print("*************************************")
-print("          Welcome to Hangman         ")
-print("*************************************")
-print()
+def main():
+	if not "--dev" in argv:
+		fprint(stderr, "under dev!\n")
+		exit(0x1)
+	print("forca.py!")
+	input()
 
-ContiuarJogo = "y"
-Score = 0
-Tentativas = 0
-
-print()
-print(f"Sua pontuação foi de: {Score}! Com {Tentativas} tentativas")
+if __name__ == "__main__":
+	main()
