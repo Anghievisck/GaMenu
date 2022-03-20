@@ -1,4 +1,5 @@
 from lib import *
+import sys
 
 #Intro:
 print("*************************************")
@@ -6,13 +7,13 @@ print("                 Menu                ")
 print("*************************************")
 print()
 
+Doing = 0
+
 Options = range(1, 7)
 
 ListOfOptions = "Which program do your want to use?\n 1. Hangman\n 2. Guess the Number\n 3. Calculator\n 4. RPG Sheet Editor\n 5. TestZone\n 6. Exit Prograram\n\nWrite your choice: "
 
 Doing = GetOption(prompt = ListOfOptions, list = Options)
-
-Doing = int(Doing)
 
 while True:
 	if Doing == 1: #Forca
@@ -32,7 +33,6 @@ while True:
 		import TestZone
 	elif Doing == 6:
 		print("Exiting...")
-		break
+		sys.exit(0)
 	print()
-
 	Doing = GetOption(prompt = ListOfOptions, list = Options)

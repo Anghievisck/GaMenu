@@ -1,58 +1,33 @@
+from lib import *
 #Intro:
 print("*************************************")
 print("      Welcome to the Calculator      ")
 print("*************************************")
 print()
 
-def Valor1() -> int:
-	No1 = input("Write the first value: ")
-	if not No1.isnumeric():
-		print("It needs to be a number...")
-		return Valor1()
-	else:
-		No1 = eval(No1)
-		return No1
+Prompt = "What operation do you want to do?\n 1. +			4. /\n 2. -                   5. Power\n 3. *  			6. Root\n>>> "
 
-def Valor2() -> int:
-	No2 = input("Write the second value: ")
-	if not No2.isnumeric():
-		print("It needs to be a number...")
-		return Valor2()
-	else:
-		No2 = eval(No2)
-		return No2
-
-def Operacao():
-	QualOp = input("What calculation do you wanna do? +, -, *, /, Root or Power? ")
-	QualOp = QualOp.upper()
-	if QualOp not in ["+", "-", "*", "/", "POWER", "ROOT"]:
-		print("+, -, *, /, Root or Power...")
-		return Operacao()
-	else:
-		return QualOp
-
-Op = Operacao()
-Var1 = Valor1()
-Var2 = Valor2()
-Continuar = None
+Var1 = GetInt(prompt = "Please enter the first value: ", list = None)
+Var2 = GetInt(prompt = "Please enter the second value: ", list = None)
+Op = GetOption(prompt = Prompt, list = [1,2,3,4,5,6])
 
 while True:
-	if Op == "+":
+	if Op == 1:
 		total = Var1 + Var2
 		print(total)
-	elif Op == "-":
+	elif Op == 2:
 		total = Var1 - Var2
 		print(total)
-	elif Op == "*":
+	elif Op == 3:
 		total = Var1 * Var2
 		print(total)
-	elif Op == "/":
+	elif Op == 4:
 		total = Var1 / Var2
 		print(total)
-	elif Op == "POWER":
+	elif Op == 5:
 		total = Var1 ** Var2
 		print(total)
-	elif Op == "ROOT":
+	elif Op == 6:
 		total = Var1 ** (1/Var2)
 		print(total)
 	print()
@@ -69,6 +44,6 @@ while True:
 	if Continuar in ["N", "n"]:
 		break
 
-	Op = Operacao()
-	Var1 = Valor1()
-	Var2 = Valor2()
+	Var1 = GetInt(prompt = "Please enter the first value: ", list = None)
+	Var2 = GetInt(prompt = "Please enter the second value: ", list = None)
+	Op = GetOption(prompt = Prompt, list = [1,2,3,4,5,6])

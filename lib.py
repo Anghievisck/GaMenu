@@ -21,7 +21,7 @@ def GetInt(prompt = "Please enter a number: ", ErrorPrompt = None, list = [1, 2,
 			return GetInt(prompt = prompt, ErrorPrompt = ErrorPrompt, list = list)
 		else:
 			Intenger = int(Intenger)
-			return Intenger
+	return int(Intenger)
 
 def GetStr(prompt = "Please enter a string: ", ErrorPrompt = None, list = ["Y", "N"]):
 	String = input(prompt)
@@ -34,6 +34,7 @@ def GetStr(prompt = "Please enter a string: ", ErrorPrompt = None, list = ["Y", 
 				print(f"\nPlease enter something that's in {list}\n")
 			else:
 				print(ErrorPrompt)
+			prompt = ">>> "
 			return GetStr(prompt = prompt, ErrorPrompt = ErrorPrompt, list = list)
 		else:
 			return String
@@ -41,7 +42,7 @@ def GetStr(prompt = "Please enter a string: ", ErrorPrompt = None, list = ["Y", 
 def GetOption(prompt = None, ErrorPrompt = None, list = ["1", "2", "3"]):
 
 	if prompt == None:
-		Option = input(f"Which option do you want? {list} (No need for captalization): ")
+		Option = input(f"Which option do you want? {list}: ")
 	else:
 		Option = input(prompt)
 
@@ -112,8 +113,12 @@ def Dice(EspecifictRoll = None, CustomDiceMax = None):
 		return
 
 	Roll = randint(Min, Max)
-	print(f"You rolled {Roll}")
-	print()
+	
+	if WhichDice.isnumeric():
+		print(f"You rolled {Roll}")
+		print()
+	else:
+		pass
 
 	if EspecifictRoll == None:
 		Confirmation = GetStr(prompt = "Do you want to roll again? ('y' for yes, and 'n' for no): ")
